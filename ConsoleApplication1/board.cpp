@@ -2,13 +2,32 @@
 
 std::ostream& operator<< (std::ostream& out, const Board& board)
 {
+	int count{};
 	for (size_t y{ 0 }; y < board.m_cases.size(); y++)
 	{
 		for (size_t x{ 0 }; x < board.m_cases.size(); x++)
 		{
-			out << board.m_cases[y][x] << "\t";
+			out << "#" << count << " " << board.m_cases[y][x] << "\t";
+			count++;
 		}
 		out << "\n";
 	}
 	return out;
+}
+
+Case* Board::getCase(int input)
+{
+	switch (input)
+	{
+	case 0: return m_cases[0][0].get();
+	case 1: return m_cases[0][1].get(); 
+	case 2: return m_cases[0][2].get(); 
+	case 3:	return m_cases[1][0].get(); 
+	case 4:	return m_cases[1][1].get();
+	case 5:	return m_cases[1][2].get();
+	case 6:	return m_cases[2][0].get();
+	case 7:	return m_cases[2][1].get();
+	case 8:	return m_cases[2][2].get();
+	default: std::cerr << "Out of bound case";
+	}
 }
