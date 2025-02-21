@@ -15,7 +15,8 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& out, const Case& point);
 	bool isEmpty() const;
-	void checkCase();
+	void fillCase(char player);
+	const char& getSign() const;
 
 private:
 

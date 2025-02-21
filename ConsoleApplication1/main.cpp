@@ -14,6 +14,8 @@ int inputChoice()
 		}
 		else if (!std::cin)
 		{
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 			std::cout << "Wrong input! Try again: ";
 			continue;
 		}
@@ -25,16 +27,22 @@ int main()
 {
 	std::cout << "Welcome to tic-tac-toe !\n\n";
 
+	std::array<char, 2> players{ 'X', 'O' };
+
 	Board board{};
 
-	std::cout << board << "\n\n";
+	for (const auto& e : players)
+	{
+		std::cout << board << "\n\n"; // display board
 
-	const int choice{ inputChoice() };
+		const int choice{ inputChoice() }; // User input choice
 
-	Case selectedCase{ board.getCase(choice) };
+		Case& selectedCase{ board.getCase(choice) }; // getting ref of the selected case
 
-	if (selectedCase.isEmpty())
-		selectedCase.checkCase();
-	else
-		std::cout << "Case already checked !\n";
+		if (selectedCase.isEmpty()) // verifying if the case is empty
+			selectedCase.fillCase(e); // filling case with the correct sign
+		else
+			std::cout << "Case already checked !\n";
+	}
+
 }  

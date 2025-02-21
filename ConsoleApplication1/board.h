@@ -4,7 +4,7 @@
 #include "case.h"
 
 template<typename T, size_t size>
-using Point2D = std::array<std::array<std::unique_ptr<T>, size>, size>;
+using Point2D = std::array<std::array<T, size>, size>;
 
 class Board
 {
@@ -13,7 +13,8 @@ public:
 	Board() = default;
 
 	friend std::ostream& operator<< (std::ostream& out, const Board& board);
-	Case* getCase(int input);
+	Case& getCase(int input);
+	bool hasWon(const char& c) const;
 
 private:
 
