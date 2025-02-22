@@ -1,4 +1,5 @@
 #include "board.h"
+#include "cpu.h"
 
 int inputChoice(const char& sign)
 {
@@ -27,36 +28,56 @@ int main()
 {
 	std::cout << "Welcome to tic-tac-toe !\n\n";
 
-	std::array<char, 2> players{ 'X', 'O' };
+	std::array<std::unique_ptr<Player>, 2> players
+	{
+		std::make_unique<Player>('X'),
+		std::make_unique<Cpu>('O'),
+	};
 
 	Board board{};
 
 	bool continueGame{ true };
 	while(continueGame)
 	{
-		for (const auto& sign : players)
+		for (const auto& player : players)
 		{
-			while(true)
+			if (Cpu * cpu{dynamic_cast<Cpu*>(player.get())})
 			{
-				std::cout << board << "\n\n"; // display board
-
-				const int choice{ inputChoice(sign) }; // User input choice
-
-				Case& selectedCase{ board.getCase(choice) }; // getting ref of the selected case
-
-				if (selectedCase.isEmpty()) // verifying if the case is empty
+				try
 				{
-					selectedCase.fillCase(sign); // filling case with the correct sign
-					break;
+					cpu->playMove(board).fillCase(cpu->getSign());
 				}
-				else
+				catch(std::runtime_error& error)
 				{
-					std::cout << "Case already checked !\n";
-					continue;
+					std::cerr << error.what();
+					return 0;
 				}
 			}
 
-			if (board.hasWon(sign) || board.isDraw())
+			else
+			{
+				while (true)
+				{
+					std::cout << board << "\n\n"; // display board
+
+					const int choice{ inputChoice(player->getSign()) }; // User input choice
+
+					Case& selectedCase{ board.getCase(choice) }; // getting ref of the selected case
+
+					if (selectedCase.isEmpty()) // verifying if the case is empty
+					{
+						selectedCase.fillCase(player->getSign()); // filling case with the correct sign
+						break;
+					}
+					else
+					{
+						std::cout << "Case already checked !\n";
+						continue;
+					}
+				}
+			}
+
+			if (board.hasWon(player->getSign()) || board.isDraw())
 			{
 				continueGame = false;
 				break;

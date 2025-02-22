@@ -14,6 +14,7 @@ public:
 
 	friend std::ostream& operator<< (std::ostream& out, const Board& board);
 	Case& getCase(int input);
+	Point2D<Case, 3>& get_m_cases();
 	bool hasWon(const char& c) const;
 	bool isDraw() const;
 	bool isCombinationPlayable(const Case& a, const Case& b, const Case& c) const;

@@ -15,6 +15,11 @@ std::ostream& operator<< (std::ostream& out, const Board& board)
 	return out;
 }
 
+Point2D<Case, 3>& Board::get_m_cases()
+{
+	return m_cases;
+}
+
 Case& Board::getCase(int input)
 {
 	switch (input)
