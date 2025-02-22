@@ -17,6 +17,9 @@ public:
 	bool isEmpty() const;
 	void fillCase(char player);
 	const char& getSign() const;
+	bool operator== (const Case& c) const;
+	bool operator== (char c) const;
+	Case& operator= (const Case& c);
 
 private:
 

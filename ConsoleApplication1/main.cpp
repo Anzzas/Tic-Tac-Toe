@@ -1,22 +1,22 @@
 #include "board.h"
 
-int inputChoice()
+int inputChoice(const char& sign)
 {
-	std::cout << "Enter the number of the case you want to take: ";
+	std::cout << "Enter the case number [" << sign << "]: ";
 	int input{};
 	while(true)
 	{
 		std::cin >> input;
 		if (input < 0 || input > 8)
 		{
-			std::cout << "You did not entered a number between 0 and 8! Try again: ";
+			std::cout << "You did not entered a number between 0 and 8! Try again [" << sign <<"]: ";
 			continue;
 		}
 		else if (!std::cin)
 		{
 			std::cin.clear();
 			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-			std::cout << "Wrong input! Try again: ";
+			std::cout << "Wrong input! Try again [" << sign <<"]: ";
 			continue;
 		}
 		return input;
@@ -31,18 +31,39 @@ int main()
 
 	Board board{};
 
-	for (const auto& e : players)
+	bool continueGame{ true };
+	while(continueGame)
 	{
-		std::cout << board << "\n\n"; // display board
+		for (const auto& sign : players)
+		{
+			while(true)
+			{
+				std::cout << board << "\n\n"; // display board
 
-		const int choice{ inputChoice() }; // User input choice
+				const int choice{ inputChoice(sign) }; // User input choice
 
-		Case& selectedCase{ board.getCase(choice) }; // getting ref of the selected case
+				Case& selectedCase{ board.getCase(choice) }; // getting ref of the selected case
 
-		if (selectedCase.isEmpty()) // verifying if the case is empty
-			selectedCase.fillCase(e); // filling case with the correct sign
-		else
-			std::cout << "Case already checked !\n";
+				if (selectedCase.isEmpty()) // verifying if the case is empty
+				{
+					selectedCase.fillCase(sign); // filling case with the correct sign
+					break;
+				}
+				else
+				{
+					std::cout << "Case already checked !\n";
+					continue;
+				}
+			}
+
+			if (board.hasWon(sign) || board.isDraw())
+			{
+				continueGame = false;
+				break;
+			}
+		}
 	}
 
+
+	std::cout << board << "\n\nGame Over !\n";
 }  
