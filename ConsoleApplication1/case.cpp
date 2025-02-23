@@ -28,3 +28,15 @@ Case& Case::operator= (const Case& c)
 	this->m_sign = c.getSign();
 	return *this;
 }
+
+Case* findEmptyCases(Case& a, Case& b, Case& c)
+{
+	if (a.isEmpty())
+		return &a;
+	if (b.isEmpty())
+		return &b;
+	if (c.isEmpty())
+		return &c;
+
+	return nullptr;
+}

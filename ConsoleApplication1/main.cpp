@@ -26,65 +26,72 @@ int inputChoice(const char& sign)
 
 int main()
 {
-	std::cout << "Welcome to tic-tac-toe !\n\n";
-
-	std::array<std::unique_ptr<Player>, 2> players
+	while(true)
 	{
-		std::make_unique<Player>('X'),
-		std::make_unique<Cpu>('O'),
-	};
+		std::cout << "Welcome to tic-tac-toe !\n\n";
 
-	Board board{};
-
-	bool continueGame{ true };
-	while(continueGame)
-	{
-		for (const auto& player : players)
+		std::array<std::unique_ptr<Player>, 2> players
 		{
-			if (Cpu * cpu{dynamic_cast<Cpu*>(player.get())})
+			std::make_unique<Player>('X'),
+			std::make_unique<Cpu>('O'),
+		};
+
+		Board board{};
+
+		bool continueGame{ true };
+		while (continueGame)
+		{
+			for (const auto& player : players)
 			{
-				try
+				if (Cpu * cpu{ dynamic_cast<Cpu*>(player.get()) })
 				{
-					cpu->playMove(board).fillCase(cpu->getSign());
-				}
-				catch(std::runtime_error& error)
-				{
-					std::cerr << error.what();
-					return 0;
-				}
-			}
-
-			else
-			{
-				while (true)
-				{
-					std::cout << board << "\n\n"; // display board
-
-					const int choice{ inputChoice(player->getSign()) }; // User input choice
-
-					Case& selectedCase{ board.getCase(choice) }; // getting ref of the selected case
-
-					if (selectedCase.isEmpty()) // verifying if the case is empty
+					try
 					{
-						selectedCase.fillCase(player->getSign()); // filling case with the correct sign
-						break;
+						cpu->playMove(board).fillCase(cpu->getSign());
 					}
-					else
+					catch (std::runtime_error& error)
 					{
-						std::cout << "Case already checked !\n";
-						continue;
+						std::cerr << error.what();
+						return 0;
 					}
 				}
-			}
 
-			if (board.hasWon(player->getSign()) || board.isDraw())
-			{
-				continueGame = false;
-				break;
+				else
+				{
+					while (true)
+					{
+						std::cout << board << "\n\n"; // display board
+
+						const int choice{ inputChoice(player->getSign()) }; // User input choice
+
+						Case& selectedCase{ board.getCase(choice) }; // getting ref of the selected case
+
+						if (selectedCase.isEmpty()) // verifying if the case is empty
+						{
+							selectedCase.fillCase(player->getSign()); // filling case with the correct sign
+							break;
+						}
+						else
+						{
+							std::cout << "Case already checked !\n";
+							continue;
+						}
+					}
+				}
+
+				if (board.hasWon() || board.isDraw())
+				{
+					continueGame = false;
+					break;
+				}
 			}
 		}
+
+		std::cout << board << "\n\nGame Over ! Play again ? (y/n): ";
+		char pAgain{};
+		std::cin >> pAgain;
+		if (pAgain == 'n' || pAgain == 'N')
+			return 0;
+		std::cout << "\n\n\n\n\n\n";
 	}
-
-
-	std::cout << board << "\n\nGame Over !\n";
 }  

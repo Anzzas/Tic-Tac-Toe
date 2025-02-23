@@ -37,54 +37,65 @@ Case& Board::getCase(int input)
 	}
 }
 
-bool Board::hasWon(const char& c) const
+bool Board::hasWon() const
 {
-
-	for (size_t y{ 0 }; y < m_cases.size(); y++)
+	if (m_cases[1][1] != '\0') // Checks if middle case is empty to prevent unwanted early win
 	{
+		// Diagonal win condition check
 
-		for (size_t x{ 0 }; x < m_cases.size(); x++)
-		{
-			if (m_cases[y][x].getSign() != c)
-				continue;
-
-			if (x + 2 < m_cases.size())
-			{
-				if ((m_cases[y][x] == m_cases[y][x + 1]) && (m_cases[y][x + 1] == m_cases[y][x + 2]))
-					return true;
-			}
-			else if (y + 2 < m_cases.size())
-			{
-				if ((m_cases[y][x] == m_cases[y + 1][x]) && (m_cases[y + 1][x] == m_cases[y + 2][x]))
-					return true;
-			}
-		}
-		if (m_cases[1][1] != '\0') // Checks if middle case is empty to prevent unwanted early win
-		{
-			// Diagonal win condition check
-
-			if (m_cases[0][0] == m_cases[1][1] && m_cases[1][1] == m_cases[2][2])
-				return true;
-			if (m_cases[0][2] == m_cases[1][1] && m_cases[1][1] == m_cases[2][0])
-				return true;
-		}
+		if ((m_cases[0][0] == m_cases[1][1] && m_cases[1][1] == m_cases[2][2]) || (m_cases[0][2] == m_cases[1][1] && m_cases[1][1] == m_cases[2][0]))
+			return true;
 	}
-	return false;
+
+	for (size_t i{ 0 }; i < m_cases.size(); i++)
+	{
+			// check row
+			if ((m_cases[i][0] != '\0' && m_cases[i][0] == m_cases[i][1]) && (m_cases[i][1] == m_cases[i][2]))
+				return true;
+
+			// check column
+			if (m_cases[0][i] != '\0' && (m_cases[0][i] == m_cases[1][i]) && (m_cases[1][i] == m_cases[2][i]))
+				return true;
+	}
+	return false; // No win condition has been met
 }
 
 bool Board::isCombinationPlayable(const Case& a, const Case& b, const Case& c) const
 {
-	// Vérifie si la combinaison contient à la fois X et O (donc bloquée)
-	bool hasX{ a == 'X' || b == 'X' || c == 'X' };
-	bool hasO{ (a == 'O' || b == 'O' || c == 'O') };
-
-	if (hasX && hasO) // Si la combinaison contient à la fois X et O, elle est bloquée
-		return false;
-
-	return true; // Sinon, elle est encore jouable
+	return a.isEmpty() || b.isEmpty() || c.isEmpty() ? true : false;
 }
 
+bool Board::isCombinationWinnable(const Case& a, const Case& b, const Case& c) const
+{
+	int count{};
+	if (a == 'O')
+		++count;
+	if (b == 'O')
+		++count;
+	if (c == 'O')
+		++count;
 
+	if (count >= 2) // If the row/column contains at least 2 'O', then it's winnable for CPU
+		return true;
+
+	return false;
+}
+
+bool Board::isOpponentWinning(const Case& a, const Case& b, const Case& c) const
+{
+	int count{};
+	if (a == 'X')
+		++count;
+	if (b == 'X')
+		++count;
+	if (c == 'X')
+		++count;
+
+	if (count >= 2) // If the row/column contains at least 2 'X', then it's winnable for human player
+		return true;
+
+	return false;
+}
 
 bool Board::isDraw() const
 {

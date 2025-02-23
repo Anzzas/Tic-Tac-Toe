@@ -25,4 +25,7 @@ private:
 
 	char m_sign{};
 };
+
+Case* findEmptyCases(Case& a, Case& b, Case& c);
+
 #endif
