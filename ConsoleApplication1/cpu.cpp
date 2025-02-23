@@ -32,11 +32,17 @@ Case* Cpu::findWinningMove(const Board& board, Point2D<Case, 3>& m_cases)
 Case* Cpu::findDefensiveMove(const Board& board, Point2D<Case, 3>& m_cases)
 {
 	// Check diagonal defensive move against human player to prevent him winning
-	if (board.isOpponentWinning(m_cases[0][0], m_cases[1][1], m_cases[2][2])) // check diagonal 1
-		return findEmptyCases(m_cases[0][0], m_cases[1][1], m_cases[2][2]);
+	if (board.isCombinationPlayable(m_cases[0][0], m_cases[1][1], m_cases[2][2]))
+	{
+		if (board.isOpponentWinning(m_cases[0][0], m_cases[1][1], m_cases[2][2])) // check diagonal 1
+			return findEmptyCases(m_cases[0][0], m_cases[1][1], m_cases[2][2]);
+	}
 
-	else if (board.isOpponentWinning(m_cases[0][2], m_cases[1][1], m_cases[2][0])) // check diagonal 2
-		return findEmptyCases(m_cases[0][2], m_cases[1][1], m_cases[2][0]);
+	if (board.isCombinationPlayable(m_cases[0][2], m_cases[1][1], m_cases[2][0]))
+	{
+		if (board.isOpponentWinning(m_cases[0][2], m_cases[1][1], m_cases[2][0])) // check diagonal 2
+			return findEmptyCases(m_cases[0][2], m_cases[1][1], m_cases[2][0]);
+	}
 
 	// loops to search for any defensive move to prevent opponent from winning
 	for (size_t i{ 0 }; i < m_cases.size(); i++)
@@ -112,9 +118,6 @@ Case& Cpu::playMove(Board& board)
 	Case* move{ nullptr };
 
 	if (move = findWinningMove(board, m_cases))
-		return *move;
-
-	else if (move = findWinningMove(board, m_cases))
 		return *move;
 
 	else if (move = findDefensiveMove(board, m_cases))
