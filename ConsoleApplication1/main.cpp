@@ -24,6 +24,46 @@ int inputChoice(const char& sign)
 	}
 }
 
+bool isGameOver(const Board& board, char winner)
+{
+	if (board.hasWon() || board.isDraw())
+	{
+		if (board.hasWon())
+		{
+			std::cout << "\n\nWinner is: [" << winner << "]\n\n";
+		}
+		return true;
+	}
+	return false;
+}
+
+bool replayGame(const Board& board)
+{
+	std::cout << board << "\n\nGame Over ! "
+			  << "Play again ? (y/n): ";
+
+	char pAgain{};
+
+	while (true)
+	{
+		std::cin >> pAgain;
+
+		if (pAgain == 'n' || pAgain == 'N')
+			return false;
+		else if (pAgain == 'y' || pAgain == 'Y')
+		{
+			std::cout << "\n\n\n\n\n\n";
+			return true;
+		}
+		else if (!std::cin)
+		{
+			std::cin.clear();
+			std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+		}
+		std::cout << "Wrong input! Try again (y/n): ";
+	}
+}
+
 int main()
 {
 	while(true)
@@ -36,10 +76,12 @@ int main()
 			std::make_unique<Cpu>('O'),
 		};
 
+		char winner{};
+
 		Board board{};
 
-		bool continueGame{ true };
-		while (continueGame)
+		bool GameOver{};
+		while (!GameOver)
 		{
 			for (const auto& player : players)
 			{
@@ -79,19 +121,11 @@ int main()
 					}
 				}
 
-				if (board.hasWon() || board.isDraw())
-				{
-					continueGame = false;
+				if (GameOver = isGameOver(board, player->getSign()))
 					break;
-				}
 			}
 		}
-
-		std::cout << board << "\n\nGame Over ! Play again ? (y/n): ";
-		char pAgain{};
-		std::cin >> pAgain;
-		if (pAgain == 'n' || pAgain == 'N')
+		if (!replayGame(board))
 			return 0;
-		std::cout << "\n\n\n\n\n\n";
 	}
 }  

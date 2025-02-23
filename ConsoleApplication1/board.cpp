@@ -116,6 +116,6 @@ bool Board::isDraw() const
 	else if (isCombinationPlayable(m_cases[0][2], m_cases[1][1], m_cases[2][0]))
 				return false;
 
-	std::cout << "Draw !\n";
+	std::cout << "\n\nDraw !\n\n";
 	return true;
 }
